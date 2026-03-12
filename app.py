@@ -210,6 +210,19 @@ h1, h2, h3, h4 {
     color: #1a3a7a !important;
 }
 
+/* ── WIDGET LABELS ───────────────────────────────────────────── */
+.stSelectbox label,
+.stMultiSelect label,
+.stFileUploader label,
+.stTextInput label,
+[data-testid="stWidgetLabel"],
+[data-testid="stWidgetLabel"] p {
+    color: #0d2157 !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+}
+
 /* ── BROWSE FILES BUTTON ─────────────────────────────────────── */
 [data-testid="stFileUploader"] button,
 [data-testid="stFileUploaderDropzone"] button {
@@ -791,7 +804,7 @@ def deduplicate_rows(rows):
 def rows_to_csv_bytes(rows):
     output = io.StringIO()
     writer = csv.writer(output)
-    writer.writerow(['Date', 'Details', 'Amount'])
+    writer.writerow(['Date', 'Description', 'Amount'])
     for row in rows:
         writer.writerow([row['date'], row['details'], row['amount']])
     return output.getvalue().encode('utf-8')
@@ -838,7 +851,7 @@ with st.sidebar:
     selected_bank = st.selectbox("Bank", BANK_LIST, label_visibility="collapsed", key="selected_bank")
     st.markdown('<hr style="border-color:rgba(201,168,76,0.15);margin:16px 0">', unsafe_allow_html=True)
     st.markdown('<p style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,168,76,0.7);margin-bottom:6px">Output Format</p>', unsafe_allow_html=True)
-    st.caption("Date · Details · Amount (signed)")
+    st.caption("Date · Description · Amount (signed)")
     st.caption("Positive = money in · Negative = money out")
     if selected_bank == "Capitec":
         st.markdown('<hr style="border-color:rgba(201,168,76,0.15);margin:16px 0">', unsafe_allow_html=True)
@@ -846,7 +859,7 @@ with st.sidebar:
         st.caption("Bank fees are automatically split into separate Service Fee rows.")
     st.markdown('<hr style="border-color:rgba(201,168,76,0.15);margin:16px 0">', unsafe_allow_html=True)
     st.markdown('<p style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,168,76,0.7);margin-bottom:6px">Pastel Compatible</p>', unsafe_allow_html=True)
-    st.caption("Date + Details + Amount maps directly to Pastel's import format.")
+    st.caption("Date + Description + Amount maps directly to Pastel's import format.")
 
 # ─── HEADER ───────────────────────────────────────────────────────────────────
 _hcol1, _hcol2, _hcol3 = st.columns([1.2, 3.5, 0.7])
