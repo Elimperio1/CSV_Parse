@@ -6,7 +6,7 @@ from datetime import datetime
 
 # ─── PAGE CONFIG ─────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="SA Bank → CSV",
+    page_title="Elimperio: Bank Statement PDF-CSV",
     page_icon=None,
     layout="wide",
     initial_sidebar_state="expanded"
@@ -336,9 +336,9 @@ def extract_transactions_vision(pdf_bytes, bank, stream_status=None):
             raw += text
             token_count += 1
             if stream_status and token_count % 50 == 0:
-                stream_status.caption(f"Receiving response (vision) — {token_count} tokens so far...")
+                stream_status.markdown(f'<div style="display:flex;align-items:center;gap:10px;color:#4a6a4a;font-size:13px"><div style="width:16px;height:16px;border:2px solid #4a6a4a;border-top-color:#6ab86a;border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0"></div>Receiving (vision) — {token_count} tokens...</div><style>@keyframes spin{{to{{transform:rotate(360deg)}}}}</style>', unsafe_allow_html=True)
     if stream_status:
-        stream_status.caption(f"Response complete — {token_count} tokens received. Parsing...")
+        stream_status.markdown(f'<div style="color:#6ab86a;font-size:13px">Response complete — {token_count} tokens. Parsing...</div>', unsafe_allow_html=True)
     return _parse_raw_json(raw)
 
 def _parse_raw_json(raw):
@@ -388,7 +388,7 @@ def _call_claude_stream(pdf_b64, prompt, stream_status, chunk_label=""):
             raw += text
             token_count += 1
             if stream_status and token_count % 50 == 0:
-                stream_status.caption(f"Receiving{chunk_label} — {token_count} tokens so far...")
+                stream_status.markdown(f'<div style="display:flex;align-items:center;gap:10px;color:#4a6a4a;font-size:13px"><div style="width:16px;height:16px;border:2px solid #4a6a4a;border-top-color:#6ab86a;border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0"></div>Receiving{chunk_label} — {token_count} tokens...</div><style>@keyframes spin{{to{{transform:rotate(360deg)}}}}</style>', unsafe_allow_html=True)
     return raw, token_count
 
 def extract_transactions(pdf_bytes, bank, stream_status=None):
@@ -406,7 +406,7 @@ def extract_transactions(pdf_bytes, bank, stream_status=None):
         pdf_b64 = base64.standard_b64encode(pdf_bytes).decode("utf-8")
         raw, token_count = _call_claude_stream(pdf_b64, prompt, stream_status)
         if stream_status:
-            stream_status.caption(f"Response complete — {token_count} tokens. Parsing...")
+            stream_status.markdown(f'<div style="color:#6ab86a;font-size:13px">Response complete — {token_count} tokens. Parsing...</div>', unsafe_allow_html=True)
         return _parse_raw_json(raw)
     else:
         chunks = split_pdf_bytes(pdf_bytes, CHUNK_SIZE)
@@ -415,7 +415,7 @@ def extract_transactions(pdf_bytes, bank, stream_status=None):
         for i, (page_start, page_end, chunk_bytes) in enumerate(chunks):
             chunk_label = f" chunk {i+1}/{len(chunks)} (pages {page_start}-{page_end})"
             if stream_status:
-                stream_status.caption(f"Processing{chunk_label}...")
+                stream_status.markdown(f'<div style="display:flex;align-items:center;gap:10px;color:#4a6a4a;font-size:13px"><div style="width:16px;height:16px;border:2px solid #4a6a4a;border-top-color:#6ab86a;border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0"></div>Processing{chunk_label}...</div><style>@keyframes spin{{to{{transform:rotate(360deg)}}}}</style>', unsafe_allow_html=True)
             pdf_b64 = base64.standard_b64encode(chunk_bytes).decode("utf-8")
             raw, token_count = _call_claude_stream(pdf_b64, prompt, stream_status, chunk_label)
             total_tokens += token_count
@@ -426,7 +426,7 @@ def extract_transactions(pdf_bytes, bank, stream_status=None):
                 if stream_status:
                     stream_status.caption(f"Warning: chunk {i+1} parse error — {e}")
         if stream_status:
-            stream_status.caption(f"All {len(chunks)} chunks done — {total_tokens} total tokens. Merging...")
+            stream_status.markdown(f'<div style="color:#6ab86a;font-size:13px">All {len(chunks)} chunks done — {total_tokens} total tokens. Merging...</div>', unsafe_allow_html=True)
         return all_rows
 
 def normalise_date(date_str):
@@ -561,8 +561,8 @@ with st.sidebar:
 
 # ─── HEADER ───────────────────────────────────────────────────────────────────
 st.markdown(f"""
-<div class="main-header">
-    <div class="header-title">SA Bank Statement → CSV</div>
+<div class="main-header" style="text-align:center;">
+    <div class="header-title">Elimperio: Bank Statement PDF-CSV</div>
     <div class="header-sub">Multi-Bank Extractor · Capitec · Investec · FNB · ABSA · Nedbank · Standard Bank · Powered by Claude AI</div>
 </div>
 """, unsafe_allow_html=True)
@@ -642,14 +642,14 @@ if st.session_state.confirmed_bank and st.session_state.confirmed_files:
         eta_label = f"Est. remaining: {est_rem_str}" if i > 0 else f"Est. total: {est_str}"
 
         status.markdown(f"Processing **{file_data['name']}** ({i+1}/{total_files})")
-        stream_status.caption("Sending PDF to Claude...")
+        stream_status.markdown('<div style="display:flex;align-items:center;gap:10px;color:#4a6a4a;font-size:13px"><div style="width:16px;height:16px;border:2px solid #4a6a4a;border-top-color:#6ab86a;border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0"></div>Sending PDF to Claude...</div><style>@keyframes spin{to{transform:rotate(360deg)}}</style>', unsafe_allow_html=True)
         timing.caption(eta_label)
 
         try:
             scanned = is_scanned_pdf(file_data['bytes'])
             if scanned:
                 status.markdown(f"Processing **{file_data['name']}** ({i+1}/{total_files}) — scanned PDF, using vision...")
-                stream_status.caption("Converting pages to images...")
+                stream_status.markdown('<div style="display:flex;align-items:center;gap:10px;color:#4a6a4a;font-size:13px"><div style="width:16px;height:16px;border:2px solid #4a6a4a;border-top-color:#6ab86a;border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0"></div>Converting pages to images...</div><style>@keyframes spin{to{transform:rotate(360deg)}}</style>', unsafe_allow_html=True)
                 timing.caption(f"{eta_label}  |  Vision mode (~45s per file)")
                 try:
                     raw = extract_transactions_vision(file_data['bytes'], confirmed_bank, stream_status=stream_status)
@@ -665,7 +665,7 @@ if st.session_state.confirmed_bank and st.session_state.confirmed_files:
             txn_rows = len(rows) - fee_rows
             elapsed_file = int(time.time() - file_start)
 
-            stream_status.caption(f"Done — {txn_rows} transactions extracted in {elapsed_file}s")
+            stream_status.markdown(f'<div style="color:#6ab86a;font-size:13px">Done — {txn_rows} transactions extracted in {elapsed_file}s</div>', unsafe_allow_html=True)
 
             st.session_state.processed_files.append({
                 'name': file_data['name'],
