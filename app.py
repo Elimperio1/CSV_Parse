@@ -1098,7 +1098,7 @@ with tab_history:
                 with col_a:
                     st.markdown(f'<div class="ei-result-ok" style="margin-bottom:4px">{f["name"]} — {f["txn_count"]} transactions{fee_info}</div>', unsafe_allow_html=True)
                 with col_b:
-                    hist_csv = rows_to_csv_bytes(f['rows'])https://github.com/Elimperio1/CSV_Parse/blob/main/app.py
+                    hist_csv = rows_to_csv_bytes(f['rows'])
                     st.download_button(
                         "Download CSV",
                         data=hist_csv,
