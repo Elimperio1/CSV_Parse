@@ -159,16 +159,37 @@ h1, h2, h3, h4 {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px dashed #c0b898 !important;
+    border: 2px dashed #1a3a7a !important;
     border-radius: 6px !important;
     background: #faf9f5 !important;
     transition: border-color 0.2s, background 0.2s;
 }
 [data-testid="stFileUploader"] section:hover {
-    border-color: #1a3a7a !important;
-    background: #f0eeea !important;
+    border-color: #0d2157 !important;
+    background: #eeecea !important;
 }
 [data-testid="stFileUploader"] section > div { padding: 28px 0; }
+[data-testid="stFileUploader"] section p,
+[data-testid="stFileUploader"] section span,
+[data-testid="stFileUploader"] section small,
+[data-testid="stFileUploader"] section div {
+    color: #0d2157 !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+[data-testid="stFileUploader"] section svg {
+    fill: #1a3a7a !important;
+    stroke: #1a3a7a !important;
+}
+[data-testid="stFileUploaderDropzoneInstructions"] {
+    color: #0d2157 !important;
+}
+[data-testid="stFileUploader"] label {
+    color: #0d2157 !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    letter-spacing: 1px !important;
+}
 
 /* ── BUTTONS ─────────────────────────────────────────────────── */
 .stButton > button {
@@ -751,12 +772,8 @@ if 'cached_upload_bytes' not in st.session_state:
 
 # ─── SIDEBAR ──────────────────────────────────────────────────────────────────
 with st.sidebar:
-    import base64 as _b64s
-    _logo_bytes_s = _b64s.b64decode(LOGO_B64)
-    st.markdown('<div style="padding:12px 16px 0">', unsafe_allow_html=True)
-    st.image(_logo_bytes_s, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('<hr style="border-color:rgba(201,168,76,0.3);margin:8px 0 16px">', unsafe_allow_html=True)
+    st.markdown(f'<div style="padding:16px 12px 8px;text-align:center"><img src="data:image/jpeg;base64,{LOGO_B64}" style="width:100%;max-width:200px;filter:brightness(0) invert(1);opacity:0.92"></div>', unsafe_allow_html=True)
+    st.markdown('<hr style="border-color:rgba(201,168,76,0.3);margin:4px 0 16px">', unsafe_allow_html=True)
     st.markdown('<p style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(201,168,76,0.7);margin-bottom:8px">Select Bank</p>', unsafe_allow_html=True)
     selected_bank = st.selectbox("Bank", BANK_LIST, label_visibility="collapsed", key="selected_bank")
     st.markdown('<hr style="border-color:rgba(201,168,76,0.15);margin:16px 0">', unsafe_allow_html=True)
@@ -772,22 +789,25 @@ with st.sidebar:
     st.caption("Date + Details + Amount maps directly to Pastel's import format.")
 
 # ─── HEADER ───────────────────────────────────────────────────────────────────
-# Header using native st.image + columns
-_hcol1, _hcol2, _hcol3 = st.columns([1.2, 3.5, 0.7])
-with _hcol1:
-    st.markdown('<div style="padding:4px 0">', unsafe_allow_html=True)
-    import base64 as _b64
-    _logo_bytes = _b64.b64decode(LOGO_B64)
-    st.image(_logo_bytes, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-with _hcol2:
-    st.markdown('''<div style="padding:14px 0 10px">
-    <div style="font-family:'Playfair Display',serif;font-size:13px;color:#c9a84c;letter-spacing:4px;text-transform:uppercase">Bank Statement Converter</div>
-    <div style="font-family:Montserrat,sans-serif;font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:2px;text-transform:uppercase;margin-top:4px">Capitec · Investec · FNB · ABSA · Nedbank · Standard Bank · Powered by Claude AI</div>
-    </div>''', unsafe_allow_html=True)
-with _hcol3:
-    st.markdown('<div style="display:flex;align-items:center;height:100%;padding:10px 0"><span style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);border-radius:4px;padding:6px 14px;font-size:10px;color:#c9a84c;letter-spacing:2px;text-transform:uppercase;font-family:Montserrat,sans-serif;white-space:nowrap">PDF → CSV</span></div>', unsafe_allow_html=True)
-st.markdown('<div style="height:3px;background:linear-gradient(90deg,#c9a84c,#a07a2a,#c9a84c);margin:-8px -1rem 24px -1rem"></div>', unsafe_allow_html=True)
+st.markdown(f"""
+<div style="
+    background: linear-gradient(135deg, #0d2157 0%, #1a3a7a 60%, #0d2157 100%);
+    border-bottom: 3px solid #c9a84c;
+    padding: 20px 36px;
+    margin: -1rem -1rem 2rem -1rem;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+">
+    <img src="data:image/jpeg;base64,{LOGO_B64}"
+         style="height:60px;object-fit:contain;filter:brightness(0) invert(1);flex-shrink:0;opacity:0.92">
+    <div style="flex:1">
+        <div style="font-family:'Playfair Display',serif;font-size:13px;color:#c9a84c;letter-spacing:4px;text-transform:uppercase;margin-bottom:5px">Bank Statement Converter</div>
+        <div style="font-family:Montserrat,sans-serif;font-size:10px;color:rgba(255,255,255,0.5);letter-spacing:2px;text-transform:uppercase">Capitec · Investec · FNB · ABSA · Nedbank · Standard Bank · Powered by Claude AI</div>
+    </div>
+    <span style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);border-radius:4px;padding:6px 16px;font-size:10px;color:#c9a84c;letter-spacing:2px;text-transform:uppercase;font-family:Montserrat,sans-serif;white-space:nowrap">PDF → CSV</span>
+</div>
+""", unsafe_allow_html=True)
 
 # ─── API CHECK ───────────────────────────────────────────────────────────────
 if not check_api_configured():
@@ -1121,3 +1141,4 @@ with tab_history:
                 )
             if hi < len(st.session_state.history) - 1:
                 st.markdown('<hr class="ei-divider">', unsafe_allow_html=True)
+            
