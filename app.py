@@ -190,6 +190,62 @@ h1, h2, h3, h4 {
     font-weight: 600 !important;
     letter-spacing: 1px !important;
 }
+/* uploaded file list */
+[data-testid="stFileUploader"] ul li,
+[data-testid="stFileUploader"] ul li span,
+[data-testid="stFileUploader"] ul li p,
+[data-testid="stFileUploaderFile"],
+[data-testid="stFileUploaderFile"] span,
+[data-testid="stFileUploaderFile"] p,
+[data-testid="stFileUploaderFile"] small,
+[data-testid="stFileUploader"] [data-testid="stText"],
+[data-testid="stFileUploader"] .uploadedFileName {
+    color: #0d2157 !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+[data-testid="stFileUploader"] ul li svg,
+[data-testid="stFileUploaderFile"] svg {
+    fill: #1a3a7a !important;
+    stroke: #1a3a7a !important;
+    color: #1a3a7a !important;
+}
+
+/* ── BROWSE FILES BUTTON ─────────────────────────────────────── */
+[data-testid="stFileUploader"] button,
+[data-testid="stFileUploaderDropzone"] button {
+    background: white !important;
+    color: #0d2157 !important;
+    border: 1.5px solid #1a3a7a !important;
+    border-radius: 4px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+}
+[data-testid="stFileUploader"] button:hover,
+[data-testid="stFileUploaderDropzone"] button:hover {
+    background: #0d2157 !important;
+    color: white !important;
+}
+
+/* ── SELECTBOX / MULTISELECT ─────────────────────────────────── */
+div[data-baseweb="select"] *,
+div[data-baseweb="select"] input,
+div[data-baseweb="select"] [class*="placeholder"],
+div[data-baseweb="select"] [class*="singleValue"],
+div[data-baseweb="select"] [class*="option"],
+div[data-baseweb="popover"] *,
+div[data-baseweb="popover"] li,
+div[data-baseweb="menu"] * {
+    color: #0d2157 !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+div[data-baseweb="select"] [class*="control"] {
+    background: white !important;
+    border-color: #1a3a7a !important;
+}
+div[data-baseweb="popover"] [class*="option"]:hover,
+div[data-baseweb="menu"] li:hover {
+    background: #e8eef7 !important;
+}
 
 /* ── BUTTONS ─────────────────────────────────────────────────── */
 .stButton > button {
@@ -1139,4 +1195,3 @@ with tab_history:
                 )
             if hi < len(st.session_state.history) - 1:
                 st.markdown('<hr class="ei-divider">', unsafe_allow_html=True)
-            
