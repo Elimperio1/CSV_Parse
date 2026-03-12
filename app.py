@@ -607,11 +607,13 @@ if uploaded_files:
     for uf in uploaded_files:
         if uf.name not in st.session_state.cached_upload_bytes:
             st.session_state.cached_upload_bytes[uf.name] = uf.read()
+    # Only prune cache if the uploader has files — never wipe on empty rerun
     current_names = {uf.name for uf in uploaded_files}
-    st.session_state.cached_upload_bytes = {
-        k: v for k, v in st.session_state.cached_upload_bytes.items()
-        if k in current_names
-    }
+    if current_names:
+        st.session_state.cached_upload_bytes = {
+            k: v for k, v in st.session_state.cached_upload_bytes.items()
+            if k in current_names
+        }
 
 # ── Step 2: Extraction (runs on rerun AFTER confirm — uploader will be empty) ──
 if st.session_state.confirmed_bank and st.session_state.confirmed_files:
@@ -722,9 +724,18 @@ if st.session_state.confirmed_bank and st.session_state.confirmed_files:
     st.rerun()
 
 # ── Step 1: Show confirmation panel when files are uploaded ────────────────────
-elif uploaded_files:
+elif uploaded_files or st.session_state.cached_upload_bytes:
     already_processed = {f['name'] for f in st.session_state.processed_files}
-    new_files = [f for f in uploaded_files if f.name not in already_processed]
+    if uploaded_files:
+        new_files = [f for f in uploaded_files if f.name not in already_processed]
+    else:
+        # Uploader cleared after bank switch — reconstruct file list from cache
+        import types as _types
+        new_files = [
+            _types.SimpleNamespace(name=name)
+            for name in st.session_state.cached_upload_bytes
+            if name not in already_processed
+        ]
 
     if new_files:
         st.markdown("---")
